@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'quiz_attempts',
+          model: 'QuizAttempts',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'questions',
+          model: 'Questions',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -33,7 +33,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: true, // Bisa null jika siswa tidak menjawab
         references: {
-          model: 'options',
+          model: 'Options',
           key: 'id'
         },
         onUpdate: 'CASCADE',

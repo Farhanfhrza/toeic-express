@@ -27,7 +27,7 @@ module.exports = {
         // Foreign Key ke classes
         type: Sequelize.BIGINT,
         references: {
-          model: "classes",
+          model: "Classes",
           key: "id",
         },
         onUpdate: "CASCADE",

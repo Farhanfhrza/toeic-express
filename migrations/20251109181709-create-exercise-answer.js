@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'material_exercise_attempts',
+          model: 'ExerciseAttempts',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -22,14 +22,14 @@ module.exports = {
       question_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: { model: 'questions', key: 'id' },
+        references: { model: 'Questions', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       selected_option_id: {
         type: Sequelize.BIGINT,
         allowNull: true,
-        references: { model: 'options', key: 'id' },
+        references: { model: 'Options', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },

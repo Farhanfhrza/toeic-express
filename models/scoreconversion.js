@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ScoreConversion",
-      tableName: "score_conversion_scales",
+      tableName: "ScoreConversion",
       // Pastikan unique constraint di level model juga jika diperlukan:
       // indexes: [{ unique: true, fields: ['type', 'correct_answers_count'] }]
     }

@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'users', // Referensi ke guru/admin yang membuat
+          model: 'Users',
           key: 'id'
         },
         onUpdate: 'CASCADE',

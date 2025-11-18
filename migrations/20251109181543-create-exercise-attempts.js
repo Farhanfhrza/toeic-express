@@ -12,14 +12,14 @@ module.exports = {
       user_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: { model: 'users', key: 'id' },
+        references: { model: 'Users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       material_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: { model: 'materials', key: 'id' },
+        references: { model: 'Materials', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },

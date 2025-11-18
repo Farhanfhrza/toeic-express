@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: "questions",
+          model: "Questions",
           key: "id",
         },
         onUpdate: "CASCADE",
