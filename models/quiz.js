@@ -2,20 +2,24 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Quiz extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
+      // Quiz dibuat oleh User (Guru/Admin)
       Quiz.belongsTo(models.User, { foreignKey: "created_by" });
-      Quiz.hasMany(models.Question, { foreignKey: "quiz_id" });
+
+      // Quiz memiliki banyak Upaya (Attempts)
       Quiz.hasMany(models.QuizAttempt, { foreignKey: "quiz_id" });
+      
+      // Quiz memiliki banyak Soal (Polymorphic)
+      Quiz.hasMany(models.Question, { 
+        foreignKey: "entity_id", 
+        scope: { entity_type: 'quiz' }, 
+        constraints: false 
+      });
     }
   }
   Quiz.init(
     {
-      title: DataTypes.STRING,
+      title: DataTypes.STRING(255),
       description: DataTypes.TEXT,
       created_by: DataTypes.BIGINT,
       start_time: DataTypes.DATE,

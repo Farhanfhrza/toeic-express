@@ -1,19 +1,19 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Answers', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('ExerciseAnswers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       attempt_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'quiz_attempts',
+          model: 'material_exercise_attempts',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -22,20 +22,14 @@ module.exports = {
       question_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: {
-          model: 'questions',
-          key: 'id'
-        },
+        references: { model: 'questions', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       selected_option_id: {
         type: Sequelize.BIGINT,
-        allowNull: true, // Bisa null jika siswa tidak menjawab
-        references: {
-          model: 'options',
-          key: 'id'
-        },
+        allowNull: true,
+        references: { model: 'options', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
@@ -44,19 +38,14 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
-      createdAt: {
-        allowNull: false,
+      answered_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('NOW()')
-      },
-      updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('NOW()')
-      },
+      }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Answers');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('ExerciseAnswers');
   }
 };

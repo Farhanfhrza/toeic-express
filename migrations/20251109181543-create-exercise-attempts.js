@@ -1,50 +1,42 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('QuizAttempts', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('ExerciseAttempts', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       user_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id'
-        },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      quiz_id: {
+      material_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: {
-          model: 'quizzes',
-          key: 'id'
-        },
+        references: { model: 'materials', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      attempt_number: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      score: {
+        type: Sequelize.FLOAT,
+        allowNull: true
+      },
       started_at: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       finished_at: {
-        type: Sequelize.DATE
-      },
-      total_score: {
-        type: Sequelize.FLOAT,
-        allowNull: true
-      },
-      reading_score: {
-        type: Sequelize.FLOAT,
-        allowNull: true
-      },
-      listening_score: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DATE,
         allowNull: true
       },
       createdAt: {
@@ -59,7 +51,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('QuizAttempts');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('ExerciseAttempts');
   }
 };
