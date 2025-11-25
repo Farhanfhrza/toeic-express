@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   Material.init(
     {
       title: DataTypes.STRING(255),
+      content_text: DataTypes.TEXT,
       menu_category: DataTypes.STRING(20), // 'reading' atau 'listening'
       display_order: DataTypes.INTEGER,
       pdf_url: DataTypes.TEXT,

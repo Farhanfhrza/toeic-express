@@ -1,128 +1,437 @@
-const bcrypt = require('bcrypt');
-const { sequelize, User, Quiz, Question, Option, Class, ScoreConversion } = require('./models');
+const bcrypt = require("bcrypt");
+const {
+    sequelize,
+    User,
+    Quiz,
+    Question,
+    Option,
+    Class,
+    ScoreConversion,
+    Material,
+} = require("./models");
 
 const CONVERSION_DATA = [
-  // Kolom: [Correct Count, Listening Score, Reading Score]
-  [1, 5, 5], [2, 5, 5], [3, 5, 5], [4, 5, 5], [5, 5, 5],
-  [6, 5, 5], [7, 5, 5], [8, 5, 5], [9, 5, 5], [10, 5, 5],
-  [11, 5, 5], [12, 5, 5], [13, 5, 5], [14, 5, 5], [15, 5, 5],
-  [16, 5, 5], [17, 10, 5], [18, 15, 5], [19, 20, 5], [20, 25, 5],
-  [21, 30, 10], [22, 35, 15], [23, 40, 20], [24, 45, 25], [25, 50, 30],
-  [26, 55, 35], [27, 60, 40], [28, 70, 45], [29, 80, 55], [30, 85, 60],
-  [31, 90, 65], [32, 95, 70], [33, 100, 75], [34, 105, 80], [35, 115, 85],
-  [36, 125, 90], [37, 135, 95], [38, 140, 105], [39, 150, 115], [40, 160, 120],
-  [41, 170, 125], [42, 175, 130], [43, 180, 135], [44, 190, 140], [45, 200, 145],
-  [46, 205, 155], [47, 215, 160], [48, 220, 170], [49, 225, 175], [50, 230, 185],
-  [51, 235, 195], [52, 245, 205], [53, 255, 210], [54, 260, 215], [55, 265, 220],
-  [56, 275, 230], [57, 285, 240], [58, 290, 245], [59, 295, 250], [60, 300, 255],
-  [61, 310, 260], [62, 320, 270], [63, 325, 275], [64, 330, 280], [65, 335, 285],
-  [66, 340, 290], [67, 345, 295], [68, 350, 295], [69, 355, 300], [70, 360, 310],
-  [71, 365, 315], [72, 370, 320], [73, 375, 325], [74, 385, 330], [75, 395, 335],
-  [76, 400, 340], [77, 405, 345], [78, 415, 355], [79, 420, 360], [80, 425, 370],
-  [81, 430, 375], [82, 435, 385], [83, 440, 390], [84, 445, 395], [85, 450, 400],
-  [86, 455, 405], [87, 460, 415], [88, 465, 420], [89, 475, 425], [90, 480, 435],
-  [91, 485, 440], [92, 490, 450], [93, 495, 455], [94, 495, 460], [95, 495, 470],
-  [96, 495, 475], [97, 495, 485], [98, 495, 485], [99, 495, 490], [100, 495, 495]
+    // Kolom: [Correct Count, Listening Score, Reading Score]
+    [1, 5, 5],
+    [2, 5, 5],
+    [3, 5, 5],
+    [4, 5, 5],
+    [5, 5, 5],
+    [6, 5, 5],
+    [7, 5, 5],
+    [8, 5, 5],
+    [9, 5, 5],
+    [10, 5, 5],
+    [11, 5, 5],
+    [12, 5, 5],
+    [13, 5, 5],
+    [14, 5, 5],
+    [15, 5, 5],
+    [16, 5, 5],
+    [17, 10, 5],
+    [18, 15, 5],
+    [19, 20, 5],
+    [20, 25, 5],
+    [21, 30, 10],
+    [22, 35, 15],
+    [23, 40, 20],
+    [24, 45, 25],
+    [25, 50, 30],
+    [26, 55, 35],
+    [27, 60, 40],
+    [28, 70, 45],
+    [29, 80, 55],
+    [30, 85, 60],
+    [31, 90, 65],
+    [32, 95, 70],
+    [33, 100, 75],
+    [34, 105, 80],
+    [35, 115, 85],
+    [36, 125, 90],
+    [37, 135, 95],
+    [38, 140, 105],
+    [39, 150, 115],
+    [40, 160, 120],
+    [41, 170, 125],
+    [42, 175, 130],
+    [43, 180, 135],
+    [44, 190, 140],
+    [45, 200, 145],
+    [46, 205, 155],
+    [47, 215, 160],
+    [48, 220, 170],
+    [49, 225, 175],
+    [50, 230, 185],
+    [51, 235, 195],
+    [52, 245, 205],
+    [53, 255, 210],
+    [54, 260, 215],
+    [55, 265, 220],
+    [56, 275, 230],
+    [57, 285, 240],
+    [58, 290, 245],
+    [59, 295, 250],
+    [60, 300, 255],
+    [61, 310, 260],
+    [62, 320, 270],
+    [63, 325, 275],
+    [64, 330, 280],
+    [65, 335, 285],
+    [66, 340, 290],
+    [67, 345, 295],
+    [68, 350, 295],
+    [69, 355, 300],
+    [70, 360, 310],
+    [71, 365, 315],
+    [72, 370, 320],
+    [73, 375, 325],
+    [74, 385, 330],
+    [75, 395, 335],
+    [76, 400, 340],
+    [77, 405, 345],
+    [78, 415, 355],
+    [79, 420, 360],
+    [80, 425, 370],
+    [81, 430, 375],
+    [82, 435, 385],
+    [83, 440, 390],
+    [84, 445, 395],
+    [85, 450, 400],
+    [86, 455, 405],
+    [87, 460, 415],
+    [88, 465, 420],
+    [89, 475, 425],
+    [90, 480, 435],
+    [91, 485, 440],
+    [92, 490, 450],
+    [93, 495, 455],
+    [94, 495, 460],
+    [95, 495, 470],
+    [96, 495, 475],
+    [97, 495, 485],
+    [98, 495, 485],
+    [99, 495, 490],
+    [100, 495, 495],
 ];
 
 async function seed() {
-  try {
-    await sequelize.sync({ force: true });
-    console.log('Database reset ✅');
+    try {
+        await sequelize.sync({ force: true });
+        console.log("Database reset ✅");
 
-    // Hash password
-    const hashed = await bcrypt.hash('123456', 10);
+        // Hash password
+        const hashed = await bcrypt.hash("123456", 10);
 
-    const classes = await Class.create({
-      name:'X-MIPA-2',
-      level:10,
-    })
+        const classes = await Class.create({
+            name: "X-MIPA-2",
+            level: 10,
+        });
 
-    // 1️⃣ Buat Users
-    const admin = await User.create({
-      name: 'Admin Guru',
-      email: 'guru@example.com',
-      password: hashed,
-      role: 'teacher'
-    });
+        // 1️⃣ Buat Users
+        const admin = await User.create({
+            name: "Admin Guru",
+            email: "guru@example.com",
+            password: hashed,
+            role: "teacher",
+        });
 
-    const siswa = await User.create({
-      name: 'Budi Santoso',
-      nisn: '1234567890',
-      class_id: classes.id,
-      password: hashed,
-      role: 'student'
-    });
+        const siswa = await User.create({
+            name: "Albito Albi Subagja",
+            nisn: "1234567890",
+            class_id: classes.id,
+            password: hashed,
+            role: "student",
+        });
 
-    // 2️⃣ Buat Quiz
-    const quiz = await Quiz.create({
-      title: 'Ujian Bahasa Inggris',
-      description: 'Latihan listening dasar',
-      duration_minutes: 30,
-      createdBy: admin.id
-    });
+        // 2️⃣ Buat Quiz
+        const quiz = await Quiz.create({
+            title: "Ujian Bahasa Inggris",
+            description: "Latihan listening dasar",
+            duration_minutes: 30,
+            createdBy: admin.id,
+        });
 
-    // 3️⃣ Buat Question + Options
-    const q1 = await Question.create({
-      entity_type: "quiz",
-      entity_id: quiz.id,
-      question_type: "listening",
-      question_text: "What is the correct translation of 'Good Morning'?"
-    });
-    const q2 = await Question.create({
-      entity_type: "quiz",
-      entity_id: quiz.id,
-      question_type: "listening",
-      question_text: "What is the correct translation of 'Good Night'?"
-    });
+        // 3️⃣ Buat Question + Options
+        const q1 = await Question.create({
+            entity_type: "quiz",
+            entity_id: quiz.id,
+            question_type: "listening",
+            question_text: "What is the correct translation of 'Good Morning'?",
+        });
+        const q2 = await Question.create({
+            entity_type: "quiz",
+            entity_id: quiz.id,
+            question_type: "listening",
+            question_text: "What is the correct translation of 'Good Night'?",
+        });
 
-    const options = [
-      { question_id: q1.id, option_text: 'Selamat Pagi', is_correct: true },
-      { question_id: q1.id, option_text: 'Selamat Siang', is_correct: false },
-      { question_id: q1.id, option_text: 'Selamat Sore', is_correct: false },
-      { question_id: q1.id, option_text: 'Selamat Malam', is_correct: false },
-      { question_id: q2.id, option_text: 'Selamat Pagi', is_correct: false },
-      { question_id: q2.id, option_text: 'Selamat Siang', is_correct: false },
-      { question_id: q2.id, option_text: 'Selamat Sore', is_correct: false },
-      { question_id: q2.id, option_text: 'Selamat Malam', is_correct: true },
-    ];
+        const options = [
+            {
+                question_id: q1.id,
+                option_text: "Selamat Pagi",
+                is_correct: true,
+            },
+            {
+                question_id: q1.id,
+                option_text: "Selamat Siang",
+                is_correct: false,
+            },
+            {
+                question_id: q1.id,
+                option_text: "Selamat Sore",
+                is_correct: false,
+            },
+            {
+                question_id: q1.id,
+                option_text: "Selamat Malam",
+                is_correct: false,
+            },
+            {
+                question_id: q2.id,
+                option_text: "Selamat Pagi",
+                is_correct: false,
+            },
+            {
+                question_id: q2.id,
+                option_text: "Selamat Siang",
+                is_correct: false,
+            },
+            {
+                question_id: q2.id,
+                option_text: "Selamat Sore",
+                is_correct: false,
+            },
+            {
+                question_id: q2.id,
+                option_text: "Selamat Malam",
+                is_correct: true,
+            },
+        ];
 
-    await Option.bulkCreate(options);
+        await Option.bulkCreate(options);
 
-    // 3️⃣ Buat Data Konversi Skor (ScoreConversion)
-    console.log('Inserting Score Conversion Data...');
-    
-    const scoreData = [];
-    CONVERSION_DATA.forEach(row => {
-      const [correctCount, listeningScore, readingScore] = row;
+        // 3️⃣ Buat Data Konversi Skor (ScoreConversion)
+        console.log("Inserting Score Conversion Data...");
 
-      // Data untuk Listening
-      scoreData.push({
-        type: 'listening',
-        correct_answers_count: correctCount,
-        converted_score: listeningScore,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
+        const scoreData = [];
+        CONVERSION_DATA.forEach((row) => {
+            const [correctCount, listeningScore, readingScore] = row;
 
-      // Data untuk Reading
-      scoreData.push({
-        type: 'reading',
-        correct_answers_count: correctCount,
-        converted_score: readingScore,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-    });
-    
-    await ScoreConversion.bulkCreate(scoreData);
+            // Data untuk Listening
+            scoreData.push({
+                type: "listening",
+                correct_answers_count: correctCount,
+                converted_score: listeningScore,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
 
-    console.log('Seed data inserted successfully 🌱');
-    process.exit();
-  } catch (err) {
-    console.error('Seed error:', err);
-    process.exit(1);
-  }
+            // Data untuk Reading
+            scoreData.push({
+                type: "reading",
+                correct_answers_count: correctCount,
+                converted_score: readingScore,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+        });
+
+        await ScoreConversion.bulkCreate(scoreData);
+
+        // Cari admin untuk created_by
+        // const admin = await User.findOne({ where: { role: "admin" } });
+        const adminId = admin ? admin.id : 1;
+
+        const materials = [
+            // ===========================
+            //         READING
+            // ===========================
+            {
+                title: "Reading Part 1 – Introduction",
+                content_text:
+                    "Pada bagian ini, peserta akan mempelajari konsep dasar reading TOEIC, termasuk memahami konteks dan teknik scanning & skimming.",
+                content_image: null,
+                menu_category: "reading",
+                display_order: 1,
+                pdf_url: null,
+                created_by: adminId,
+                created_at: new Date(),
+                updated_at: new Date(),
+            },
+            {
+                title: "Reading Part 2 – Short Text",
+                content_text:
+                    "Materi mengenai cara memahami teks pendek, notice, memo, dan pesan singkat. Fokus pada vocabulary dan konteks.",
+                content_image: null,
+                menu_category: "reading",
+                display_order: 2,
+                pdf_url: null,
+                created_by: adminId,
+                created_at: new Date(),
+                updated_at: new Date(),
+            },
+
+            // ===========================
+            //        LISTENING
+            // ===========================
+            {
+                title: "Listening Part 1 – Photographs",
+                content_text:
+                    "Instruksi dan contoh bagaimana menjawab soal listening berdasarkan deskripsi gambar. Fokus pada keyword dan detail visual.",
+                content_image: null,
+                menu_category: "listening",
+                display_order: 1,
+                pdf_url: null,
+                created_by: adminId,
+                created_at: new Date(),
+                updated_at: new Date(),
+            },
+            {
+                title: "Listening Part 2 – Question & Response",
+                content_text:
+                    "Teknik menjawab pertanyaan pendek (Q&R). Fokus pada pola kalimat dan respon yang masuk akal.",
+                content_image: null,
+                menu_category: "listening",
+                display_order: 2,
+                pdf_url: null,
+                created_by: adminId,
+                created_at: new Date(),
+                updated_at: new Date(),
+            },
+        ];
+
+        await Material.bulkCreate(materials);
+
+        const readingMaterials = await Material.findAll({
+            where: { menu_category: "reading" },
+            order: [["display_order", "ASC"]],
+        });
+
+        const listeningMaterials = await Material.findAll({
+            where: { menu_category: "listening" },
+            order: [["display_order", "ASC"]],
+        });
+
+        console.log("✔ Materials loaded for exercise seeding");
+
+        async function createExercise(material, questionsData) {
+            for (const q of questionsData) {
+                const question = await Question.create({
+                    entity_type: "material",
+                    entity_id: material.id,
+                    question_type: "multiple_choice", // boleh disesuaikan
+                    question_text: q.question_text,
+                });
+
+                // Insert 4 options
+                for (const opt of q.options) {
+                    await Option.create({
+                        question_id: question.id,
+                        option_text: opt.text,
+                        is_correct: opt.correct,
+                    });
+                }
+            }
+        }
+
+        // ===============================
+        // EXERCISES FOR READING MATERIALS
+        // ===============================
+
+        await createExercise(readingMaterials[0], [
+            {
+                question_text: "What is John's position in the company?",
+                options: [
+                    { text: "Junior Engineer", correct: false },
+                    { text: "Senior Engineer", correct: true },
+                    { text: "Production Manager", correct: false },
+                    { text: "Quality Inspector", correct: false },
+                ],
+            },
+            {
+                question_text: "Where will the new plant open?",
+                options: [
+                    { text: "California", correct: false },
+                    { text: "Florida", correct: false },
+                    { text: "Texas", correct: true },
+                    { text: "Nevada", correct: false },
+                ],
+            },
+        ]);
+
+        await createExercise(readingMaterials[1], [
+            {
+                question_text: "When will the system maintenance take place?",
+                options: [
+                    { text: "Thursday 7 PM", correct: false },
+                    { text: "Friday 7 PM", correct: true },
+                    { text: "Saturday 8 PM", correct: false },
+                    { text: "Sunday 6 PM", correct: false },
+                ],
+            },
+            {
+                question_text: "Which system will be unavailable?",
+                options: [
+                    { text: "Payroll only", correct: false },
+                    { text: "Internal email and HR portal", correct: true },
+                    { text: "Finance system", correct: false },
+                    { text: "Internet connection", correct: false },
+                ],
+            },
+        ]);
+
+        // ===============================
+        // EXERCISES FOR LISTENING MATERIALS
+        // ===============================
+
+        await createExercise(listeningMaterials[0], [
+            {
+                question_text: "What is the man waiting for?",
+                options: [
+                    { text: "Final approval", correct: false },
+                    { text: "Updated figures", correct: true },
+                    { text: "A meeting appointment", correct: false },
+                    { text: "A presentation file", correct: false },
+                ],
+            },
+            {
+                question_text: "What does the woman ask the man to do?",
+                options: [
+                    { text: "Review the report", correct: false },
+                    { text: "Send the updated figures to her", correct: true },
+                    { text: "Prepare the slides", correct: false },
+                    { text: "Call the finance team", correct: false },
+                ],
+            },
+        ]);
+
+        await createExercise(listeningMaterials[1], [
+            {
+                question_text: "Why was the train delayed?",
+                options: [
+                    { text: "Bad weather", correct: false },
+                    { text: "Track maintenance", correct: false },
+                    { text: "Technical issues", correct: true },
+                    { text: "Schedule conflicts", correct: false },
+                ],
+            },
+            {
+                question_text: "What is the new departure time?",
+                options: [
+                    { text: "9:45", correct: false },
+                    { text: "10:00", correct: false },
+                    { text: "10:15", correct: true },
+                    { text: "10:30", correct: false },
+                ],
+            },
+        ]);
+
+        console.log("Seed data inserted successfully 🌱");
+        process.exit();
+    } catch (err) {
+        console.error("Seed error:", err);
+        process.exit(1);
+    }
 }
 
 seed();

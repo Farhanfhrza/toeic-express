@@ -14,6 +14,10 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false
       },
+      content_text: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       menu_category: { // 'reading' atau 'listening'
         type: Sequelize.STRING(20),
         allowNull: false

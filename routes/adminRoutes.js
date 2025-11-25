@@ -9,6 +9,7 @@ router.get("/results", getAllResults);
 router.get("/results/export", exportResultsToExcel);
 
 router.post("/users", verifyToken, userCtrl.createUser);
+// router.post("/users/bulk", verifyToken, userCtrl.bulkCreateUser);
 router.get("/users", userCtrl.getAllUsers);
 router.put("/users/:id", userCtrl.updateUser);
 router.delete("/users/:id", userCtrl.deleteUser);

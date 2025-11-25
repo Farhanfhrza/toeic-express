@@ -41,3 +41,14 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Terjadi kesalahan server" });
   }
 };
+
+exports.logout = (req, res) => {
+  try {
+    res.json({
+      message: "Logout berhasil. Harap hapus token otentikasi di sisi klien.",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
