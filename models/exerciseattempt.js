@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ExerciseAttempt",
-      tableName: "material_exercise_attempts",
+      tableName: "ExerciseAttempts",
     }
   );
   return ExerciseAttempt;

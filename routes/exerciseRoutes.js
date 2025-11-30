@@ -8,11 +8,17 @@ router.get("/attempt/:attemptId/questions",
     isStudent,
     exerciseController.getQuestionsByAttempt
 );
+router.get("/attempt/:attemptId/review",
+    verifyToken,
+    isStudent,
+    exerciseController.getAttemptReview
+);
 router.get("/:materialId", verifyToken, isStudent, exerciseController.getExercisesByMaterial);
 router.get("/question/:questionId", verifyToken, isStudent, exerciseController.getExerciseQuestion);
 
 router.post("/start", verifyToken, isStudent, exerciseController.startExerciseAttempt);
 router.post("/submit", verifyToken, isStudent, exerciseController.submitExerciseAnswer);
+router.post("/submit-all", verifyToken, isStudent, exerciseController.submitAllAnswers);
 router.post("/finish", verifyToken, isStudent, exerciseController.finishExerciseAttempt);
 
 

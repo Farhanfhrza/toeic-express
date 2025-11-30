@@ -168,41 +168,49 @@ async function seed() {
         const options = [
             {
                 question_id: q1.id,
+                label: "A",
                 option_text: "Selamat Pagi",
                 is_correct: true,
             },
             {
                 question_id: q1.id,
+                label: "B",
                 option_text: "Selamat Siang",
                 is_correct: false,
             },
             {
                 question_id: q1.id,
+                label: "C",
                 option_text: "Selamat Sore",
                 is_correct: false,
             },
             {
                 question_id: q1.id,
+                label: "D",
                 option_text: "Selamat Malam",
                 is_correct: false,
             },
             {
                 question_id: q2.id,
+                label: "A",
                 option_text: "Selamat Pagi",
                 is_correct: false,
             },
             {
                 question_id: q2.id,
+                label: "B",
                 option_text: "Selamat Siang",
                 is_correct: false,
             },
             {
                 question_id: q2.id,
+                label: "C",
                 option_text: "Selamat Sore",
                 is_correct: false,
             },
             {
                 question_id: q2.id,
+                label: "D",
                 option_text: "Selamat Malam",
                 is_correct: true,
             },

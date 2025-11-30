@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "MaterialProgress",
-      tableName: "user_material_progress",
+      tableName: "MaterialProgress",
       // Unique constraint: Satu siswa hanya satu progres per materi
       indexes: [{ unique: true, fields: ['user_id', 'material_id'] }]
     }
