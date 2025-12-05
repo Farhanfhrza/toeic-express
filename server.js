@@ -7,10 +7,14 @@ require('dotenv').config();
 const app = express();
 
 // ✅ Izinkan CORS
+// app.use(cors({
+//   origin: 'http://localhost:5173', // alamat frontend React
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 app.use(cors({
-  origin: 'http://localhost:5173', // alamat frontend React
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*', // alamat frontend React
+  
 }));
 
 app.use(express.json());
